@@ -1,0 +1,95 @@
+body{
+  background-color:rgb(85, 191, 218);
+  display: grid;
+  place-items:center;
+  min-height: 100vh;
+}
+
+.app {
+  background-color: #512091;
+  color:white;
+  width: 50vw;
+  min-width: 200px;
+  height: min-content;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 10px 10px 42px 0px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content:space-between;
+}
+.scoredCard {
+  display: flex;
+  flex-direction: column;
+  font-size: large;
+  align-items: flex-start;
+
+}
+
+.questionSection {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+}
+
+.scoreCard__answerSections {
+  width: 80%
+}
+
+
+.questionCount {
+  margin-bottom: 20px;
+  border-bottom: solid 1px rgb(58, 62, 99);
+}
+
+.questionCount > span {
+  font-size: 28px;
+}
+.questionText {
+  margin-bottom: 12px;
+  text-align: justify;
+  word-wrap: break-word;
+  font-size:large;
+}
+
+
+.answerSection {
+  width: 100%;
+  
+}
+
+button {
+  width: 100%;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #252d4a;
+  border-radius: 15px;
+  display: flex;
+  padding: 10px;
+  margin: 5px;
+  justify-content: flex-start;
+  align-items: center;
+  border: 5px solid #234668;
+  cursor: pointer;
+}
+
+.correct {
+  background-color: #2f922f;
+}
+
+.incorrect {
+  background-color: #ff3333;
+}
+
+button:hover {
+  background-color: #555e7d;
+}
+
+button:focus {
+  outline: none;
+}
+
+button svg {
+  margin-right: 5px;
+}

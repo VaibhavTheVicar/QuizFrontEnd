@@ -1,68 +1,140 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from "react";
 export default function App() {
-	const questions = [
-		{
-			questionText: 'What is the time complexity for quick sort',
-			negation: true,
-			answerOptions: [
-				{ answerText: 'nlogn', verdict: true },
-				{ answerText: 'logn', verdict: false },
-				{ answerText: 'n^2', verdict: false },
-				{ answerText: 'nlog*n', verdict: false },
-			],
-		},
-		{
-			questionText: 'Which engine does node.js rip off?',
-			negation: true,
-			answerOptions: [
-				{ answerText: 'Safari 3', verdict: false },
-				{ answerText: 'Chrome V8', verdict: true },
-				{ answerText: 'FireFox v3', verdict: false },
-			],
-		},
-		{
-			questionText: 'The language used to vreate iOS apps mainly is?',
-			negation: true,
-			answerOptions: [
-				{ answerText: 'Swift', verdict: true },
-				{ answerText: 'Java', verdict: false },
-				{ answerText: 'JavaScript', verdict: false },
-				{ answerText: 'Visual Basic', verdict: false },
-			],
-		},
-		{
-			questionText: 'Who made the linux OS?',
-			negation: true,
-			answerOptions: [
-				{ answerText: 'Linus Trivaldus', verdict: false },
-				{ answerText: 'Steve Jobs', verdict: false },
-				{ answerText: 'Henry Cohern', verdict: false },
-			],
-		},
-	];
-	const [displayedQuestion, changeDisplayedQuestion] = useState(0);
-	const [testOver, setTestOver] = useState(false);
-	const[score, changeScore] = useState(0);
 	
-	const handleScreenState = (verdict,negation) => {
-		if(verdict){
-			changeScore(score+1);
-		}
-		else{
-			if(negation){
-				changeScore(score-1);
-			}
-		}
+  const [questions,setQuestions] = useState([{
+	questionText: "Let's Begin!",
+	negation: false,
+	answerOptions: []
+  }]); 
+  //component did mount
+  
+  useEffect(() => {
+    async function fetchData(){
+      const res = await fetch('https://quizex.herokuapp.com/backend/question')
+      const data = await res.json();
+      console.log(data)
+      setQuestions(data)
+     }
+     fetchData();
+  }, []);
 
-		if(currentQuestion+1<questions.length){
-			changeDisplayedQuestion(currentQuestion+1)
-		}
-		else{
-			setTestOver(true)
-		}
-	}
-	
-	return (
-		<h1>Hello World!</h1>
-	);
+  console.log(questions)
+
+//   useEffect(()=>{
+//     async function fetching(){
+//       const data = await axios.get('/backend/question').then((response) => {
+//         console.log(response.data);
+//       }
+//       )
+//   }
+//   fetching();
+// })
+
+
+  const [displayedQuestion, changeDisplayedQuestion] = useState(0);
+  const [testOver, setTestOver] = useState(false);
+  const [ans,setAns] = useState([]);
+  const handleScreenState = (verdict, negation, skip,idx) => {
+
+    if(!skip)
+    {setAns([...ans,idx])}
+    
+
+
+    if (skip) {
+      if (displayedQuestion + 1 < questions.length) {
+        changeDisplayedQuestion(displayedQuestion + 1);
+      } else {
+        setTestOver(true);
+        console.log(ans)
+      }
+      return;
+    }
+    // if (verdict) {
+    //   changeScore(score + 1);
+    
+
+    if (displayedQuestion + 1 < questions.length) {
+      changeDisplayedQuestion(displayedQuestion + 1);
+    } else {
+      setTestOver(true);
+      console.log(ans)
+    }
+    
+  };
+
+  return (
+    //following Bem convention
+    <div className="app">
+      {testOver ? (
+
+        <div className="scoredCard">
+          Score Board
+          <br/>
+
+          {questions.map((question,idx)=>
+          (<>
+          <div className="scoreCard__segment container" key = {idx}>
+          <div className="scoreCard__questionSection">
+            <div className="scoreCard__questionCount">
+              <span>Question {idx + 1}</span> of{" "}
+              {questions.length}
+            </div>
+            <div className="scoreCard__questionText">
+              {questions[idx].questionText}
+            </div>
+          </div>
+          <div className="scoreCard__answerSection">
+            {questions[idx].answerOptions.map((answerOption,optionNumber) => (
+              <button className={`${answerOption.verdict ? 'correct' : `${optionNumber===ans[idx]?'incorrect':''}`}`} key = {optionNumber}>
+                {answerOption.answerText}
+              </button>
+            ))}
+           <button>
+              Skip
+            </button>
+          </div>
+          </div>
+        </>)
+          )}
+
+
+        </div>
+
+
+      ) : (
+        <>
+          <div className="questionSection">
+            <div className="questionCount">
+              <span>Question {displayedQuestion + 1}</span> of{" "}
+              {questions.length}
+            </div>
+            <div className="questionText">
+              {questions[displayedQuestion].questionText}
+            </div>
+          </div>
+          <div className="answerSection">
+            {questions[displayedQuestion].answerOptions?(questions[displayedQuestion].answerOptions.map((answerOption,idx) => (
+              <button
+                onClick={() =>
+                  handleScreenState(
+                    answerOption.verdict,
+                    questions[displayedQuestion].negation,
+                    false,
+                    idx
+                  )
+                }
+                 key = {idx}
+              >
+                {answerOption.answerText}
+              </button>
+            ))):(<></>)}
+            {questions.length!==1?(<button onClick={() => handleScreenState(null, null, true,null)}>
+              Skip
+            </button>):(<></>)}
+          </div>
+        </>
+      )}
+    </div>
+  );
 }
