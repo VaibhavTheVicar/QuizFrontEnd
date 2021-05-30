@@ -2,9 +2,10 @@ import React, { useState,useEffect } from "react";
 export default function App() {
 	
   const [questions,setQuestions] = useState([{
-	questionText: "Let's Begin!",
+	questionText: "Let's begin shortly",
 	negation: false,
-	answerOptions: []
+	answerOptions: [],
+  loader: true
   }]); 
   //component did mount
   
@@ -18,7 +19,7 @@ export default function App() {
      fetchData();
   }, []);
 
-  console.log(questions)
+  
 
 //   useEffect(()=>{
 //     async function fetching(){
@@ -106,8 +107,8 @@ export default function App() {
         <>
           <div className="questionSection">
             <div className="questionCount">
-              <span>Question {displayedQuestion + 1}</span> of{" "}
-              {questions.length}
+              {(!questions[displayedQuestion].loader)?(<><span>Question {displayedQuestion + 1}</span> of {questions.length}</>):(<div class="loader"></div>)}
+              
             </div>
             <div className="questionText">
               {questions[displayedQuestion].questionText}
