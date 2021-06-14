@@ -5,55 +5,29 @@ export default function App() {
 	questionText: "Let's begin shortly",
 	negation: false,
 	answerOptions: [],
-  loader: true
+  loader: true,
   }]); 
   //component did mount
   
   useEffect(() => {
-    async function fetchData(){
-      const res = await fetch('https://quizex.herokuapp.com/backend/question')
-      const data = await res.json();
-      console.log(data)
-      setQuestions(data)
-     }
-     fetchData();
+    setQuestions([{questionText: "In what year were the first Air Jordan sneakers released?",answerOptions: [{answerText: "1984",verdict:true},{answerText: "1934",verdict:false},
+    {answerText: "1974",verdict:false},{answerText: "1994",verdict:false}]},
+    {questionText: "Samuel Tilden, Grover Cleveland, Al Gore, and Hillary Clinton share what distinction among U.S. presidential candidates?",answerOptions: [{answerText: "They won the popular vote but lost the electoral college vote",verdict:true},{answerText: "All are women.",verdict:false},{answerText: "All hate trump.",verdict:false},{answerText: "All arebill Bill Clinton's lovers",verdict:false}]},
+    {questionText: "Which African country was formerly known as Abyssinia?",answerOptions: [{answerText: "Ethiopia",verdict:true},{answerText: "Nigeria",verdict:false},{answerText: "Uganda",verdict:false},{answerText: "Chile",verdict:false}]},{questionText: "In what year were the first Air Jordan sneakers released?",answerOptions: [{answerText: "1984",verdict:true},{answerText: "1934",verdict:false},{answerText: "1974",verdict:false},{answerText: "1994",verdict:false}]}])
   }, []);
 
-  
 
-//   useEffect(()=>{
-//     async function fetching(){
-//       const data = await axios.get('/backend/question').then((response) => {
-//         console.log(response.data);
-//       }
-//       )
-//   }
-//   fetching();
-// })
 
 
   const [displayedQuestion, changeDisplayedQuestion] = useState(0);
   const [testOver, setTestOver] = useState(false);
   const [ans,setAns] = useState([]);
-  const handleScreenState = (verdict, negation, skip,idx) => {
-
-    if(!skip)
-    {setAns([...ans,idx])}
-    
 
 
-    if (skip) {
-      if (displayedQuestion + 1 < questions.length) {
-        changeDisplayedQuestion(displayedQuestion + 1);
-      } else {
-        setTestOver(true);
-        console.log(ans)
-      }
-      return;
-    }
-    // if (verdict) {
-    //   changeScore(score + 1);
-    
+  
+  const handleScreenState = (idx) => {
+
+    setAns([...ans,idx])
 
     if (displayedQuestion + 1 < questions.length) {
       changeDisplayedQuestion(displayedQuestion + 1);
@@ -91,9 +65,6 @@ export default function App() {
                 {answerOption.answerText}
               </button>
             ))}
-           <button>
-              Skip
-            </button>
           </div>
           </div>
         </>)
@@ -119,9 +90,6 @@ export default function App() {
               <button
                 onClick={() =>
                   handleScreenState(
-                    answerOption.verdict,
-                    questions[displayedQuestion].negation,
-                    false,
                     idx
                   )
                 }
@@ -130,9 +98,6 @@ export default function App() {
                 {answerOption.answerText}
               </button>
             ))):(<></>)}
-            {questions.length!==1?(<button onClick={() => handleScreenState(null, null, true,null)}>
-              Skip
-            </button>):(<></>)}
           </div>
         </>
       )}
